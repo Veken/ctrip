@@ -21,6 +21,7 @@ class _TabNavigatorState extends State<TabNavigator>{
     // TODO: implement build
     return Scaffold(
       body: PageView(
+        onPageChanged: _pageChange,
         controller: _controller,
         children: <Widget>[
           HomePage(),
@@ -60,4 +61,11 @@ class _TabNavigatorState extends State<TabNavigator>{
 
   }
 
+  void _pageChange(int index) {
+    setState(() {
+      if(_currentIndex !=index){
+        _currentIndex = index;
+      }
+    });
+  }
 }
