@@ -1,6 +1,11 @@
+import 'package:ctrip/dao/home_dao.dart';
+import 'package:ctrip/model/common_model.dart';
+import 'package:ctrip/model/home_model.dart';
+import 'package:ctrip/widget/local_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:ctrip/constant/image_url_constant.dart';
+
 const APPBAR_SCROLL_OFFSET = 100;
 class HomePage extends StatefulWidget{
   @override
@@ -9,17 +14,20 @@ class HomePage extends StatefulWidget{
 
 class _HomePageState extends State<HomePage>{
   List _imageUrls = [
-    Constant.ASSETS_IMAGE+"banner1.jpg",
-    Constant.ASSETS_IMAGE+"banner2.jpg",
-    Constant.ASSETS_IMAGE+"banner3.jpg",
+    Constant.ASSETS_IMAGE+'banner1.jpg',
+    Constant.ASSETS_IMAGE+'banner2.jpg',
+    Constant.ASSETS_IMAGE+'banner3.jpg',
   ];
   double appBarAlpha = 0;
+  String resultString = "";
+  List<CommonModel> localNavList = [];
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       //Stack类似于Android中的Framlayout, 下面的widget会叠在上面的widget上层
-      body: Stack(children: <Widget>[
+      body: Stack(
+        children: <Widget>[
         //移除控件的padding
         MediaQuery.removePadding(
           removeTop: true,
@@ -47,11 +55,15 @@ class _HomePageState extends State<HomePage>{
                     //轮播图指示器
                     pagination: SwiperPagination(),
                   ),//Swiper
-                )//Container
+                ),//Container
+                Padding(
+                  child:  LocalNav(localNavList: localNavList,),
+                  padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
+                )
                 ,Container(
                   height: 800,
                   child: ListTile(
-                    title: Text("哈哈"),
+                    title: Text(resultString),
                   ),
                 )
               ],//Widget
@@ -66,7 +78,7 @@ class _HomePageState extends State<HomePage>{
             child: Center(
               child: Padding(
                 padding: EdgeInsets.only(top: 20),
-                child: Text("首页"),
+                child: Text('首页'),
               ),//Padding
             ),//Center
           ),//Container
@@ -88,6 +100,33 @@ class _HomePageState extends State<HomePage>{
       });
     }
     print(appBarAlpha);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
+
+  loadData() async{
+//    HomeDao.fetch().then((result){
+//      setState(() {
+//        resultString = json.encode(result);
+//      });
+//    }).catchError((e){
+//      setState(() {
+//        resultString = e.toString();
+//      });
+//    });
+    try{
+      HomeModel model = await HomeDao.fetch();
+      setState(() {
+        localNavList = model.localNavList;
+      });
+    }catch(e){
+      print(e);
+    }
   }
 
 }

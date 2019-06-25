@@ -61,7 +61,7 @@ class _TabNavigatorState extends State<TabNavigator>{
 
   }
 
-  void _pageChange(int index) {
+  void _pageChange (int index) {
     setState(() {
       if(_currentIndex !=index){
         _currentIndex = index;
